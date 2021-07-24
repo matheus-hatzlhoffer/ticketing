@@ -11,7 +11,7 @@ const router = express.Router();
 router.post(
   '/api/users/signin',
   [
-    body('email').isEmail().withMessage('Email must bem valid'),
+    body('email').isEmail().withMessage('Email must be valid'),
     body('password')
       .trim()
       .notEmpty()
@@ -23,16 +23,15 @@ router.post(
 
     const existingUser = await User.findOne({ email });
     if (!existingUser) {
-      throw new BadRequestError('Invalid Credencials');
+      throw new BadRequestError('Invalid credentials');
     }
 
-    const passwordMatch = await Password.compare(
+    const passwordsMatch = await Password.compare(
       existingUser.password,
       password,
     );
-
-    if (!passwordMatch) {
-      throw new BadRequestError('Invalid Credencials');
+    if (!passwordsMatch) {
+      throw new BadRequestError('Invalid Credentials');
     }
 
     // Generate Json web token
@@ -45,7 +44,7 @@ router.post(
     );
 
     req.session = {
-      jkt: userJwt,
+      jwt: userJwt,
     };
 
     res.status(200).send(existingUser);
