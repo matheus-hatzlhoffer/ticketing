@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Router from 'next/router';
 import useRequest from '../../hooks/use-request';
-import SignOut from './signout';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');

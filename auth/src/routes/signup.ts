@@ -1,8 +1,9 @@
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
-import { User } from '../models/user';
+
 import { validateRequest } from '../middlewares/validate-request';
+import { User } from '../models/user';
 import { BadRequestError } from '../errors/bad-request-error';
 
 const router = express.Router();
@@ -19,6 +20,7 @@ router.post(
   validateRequest,
   async (req: Request, res: Response) => {
     const { email, password } = req.body;
+
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
@@ -28,7 +30,7 @@ router.post(
     const user = User.build({ email, password });
     await user.save();
 
-    // Generate Json web token
+    // Generate JWT
     const userJwt = jwt.sign(
       {
         id: user.id,
@@ -37,6 +39,7 @@ router.post(
       process.env.JWT_KEY!,
     );
 
+    // Store it on session object
     req.session = {
       jwt: userJwt,
     };

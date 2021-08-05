@@ -1,10 +1,11 @@
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
-import { validateRequest } from '../middlewares/validate-request';
+
+import { Password } from '../services/password';
 import { User } from '../models/user';
+import { validateRequest } from '../middlewares/validate-request';
 import { BadRequestError } from '../errors/bad-request-error';
-import { Password } from '../utils/password';
 
 const router = express.Router();
 
@@ -15,7 +16,7 @@ router.post(
     body('password')
       .trim()
       .notEmpty()
-      .withMessage('You must supply a valid password'),
+      .withMessage('You must supply a password'),
   ],
   validateRequest,
   async (req: Request, res: Response) => {
@@ -34,7 +35,7 @@ router.post(
       throw new BadRequestError('Invalid Credentials');
     }
 
-    // Generate Json web token
+    // Generate JWT
     const userJwt = jwt.sign(
       {
         id: existingUser.id,
@@ -43,6 +44,7 @@ router.post(
       process.env.JWT_KEY!,
     );
 
+    // Store it on session object
     req.session = {
       jwt: userJwt,
     };
