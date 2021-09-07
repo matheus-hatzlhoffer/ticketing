@@ -1,6 +1,8 @@
 # Project to buy and sell tickets for concerts and events
+#### This is a work in progress
 
-This project uses React to serve the front-end and uses a node API with typescript to communicate with the database in mongoDB
+This project uses React to serve the front-end and uses a node API with typescript to communicate with the database in mongoDB. The idea is to expand new services to the application, this is the list of all working services:
+- [x] User Authentication
 
 ### Requirements
 
